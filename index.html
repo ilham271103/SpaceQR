@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Scanner</title>
+
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/fontawesome-free-7.1.0-web/css/all.min.css">
+</head>
+
+<body>
+
+<div class="sky"></div>
+<div class="planet"></div>
+<div class="planet2"></div>
+<div class="rocket"></div>
+
+<div class="card">
+  <div class="top-section">
+
+    <div class="border"></div>
+
+    <div class="message-container" id="welcomeMessage"></div>
+
+    <div class="vertical-form" id="scannerArea">
+      <div id="reader" style="width:100%;max-width:260px;margin:auto;"></div>
+      <button id="backBtn">Kembali</button>
+    </div>
+
+  </div>
+
+  <div class="bottom-section"></div>
+</div>
+
+<script src="assets/js/html5-qrcode.min.js"></script>
+<script src="assets/js/animation.js"></script>
+
+<script>
+
+bubbleChat([
+  "Mode QR aktif 📷",
+  "Arahkan kamera ke kode QR voucher"
+], "welcomeMessage", 600);
+
+const scanner = new Html5Qrcode("reader");
+
+scanner.start(
+  { facingMode: "environment" },
+  { fps: 10, qrbox: 220 },
+  (decodedText) => {
+
+    if (decodedText.startsWith("http")) {
+      window.location.href = decodedText;
+    }
+
+  }
+);
+
+document.getElementById("backBtn").onclick = () => {
+  history.back();
+};
+
+</script>
+
+</body>
+</html>
