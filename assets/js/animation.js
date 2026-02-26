@@ -435,3 +435,27 @@ window.addEventListener("load", () => {
   }
 });
 
+function initQRScanner() {
+
+  const reader = document.getElementById("reader");
+  if (!reader) return;
+
+  bubbleChat([
+    "Mode QR aktif 📷",
+    "Arahkan kamera ke kode QR voucher"
+  ], "welcomeMessage", 600);
+
+  const scanner = new Html5Qrcode("reader");
+
+  scanner.start(
+    { facingMode: "environment" },
+    { fps: 10, qrbox: 220 },
+    (decodedText) => {
+
+      if (decodedText.startsWith("http")) {
+        window.location.href = decodedText;
+      }
+
+    }
+  );
+}
