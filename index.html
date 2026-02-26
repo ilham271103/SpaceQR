@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QR Scanner - Mikrotik Login</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="assets/css/fontawesome-free-7.1.0-web/css/all.min.css" />
+
+  <!-- QR Library (WAJIB sebelum scanner.js) -->
+  <script src="assets/js/html5-qrcode.min.js"></script>
+</head>
+
+<body>
+  <!-- Background Elements -->
+  <div class="sky"></div>
+  <div class="planet"></div>
+  <div class="planet2"></div>
+  <div class="rocket"></div>
+
+  <!-- Main Card -->
+  <div class="card">
+    <div class="top-section">
+      <div class="border"></div>
+
+      <!-- Chat Bubble Container -->
+      <div class="message-container">
+        <div id="welcomeMessage"></div>
+      </div>
+
+      <!-- QR Scanner Area -->
+      <div id="qr-reader" style="width: 200px; margin: 10px auto; border-radius: 40px;"></div>
+    </div>
+
+    <div class="bottom-section">
+      <span class="title">Scan QR untuk Login</span>
+
+      <button id="retryBtn"
+              class="retry-btn"
+              onclick="retryScanner()"
+              style="display: none;">
+        <i class="fas fa-redo"></i> Retry
+      </button>
+    </div>
+  </div>
+
+  <!-- Scanner Logic -->
+  <script src="assets/js/scanner.js"></script>
+
+  <script>
+    window.onload = function () {
+      const messages = [
+        "📷 Mode QR aktif",
+        "Arahkan kamera ke kode QR voucher"
+      ];
+
+      bubbleChat(messages, "welcomeMessage", 700);
+      startScanner();
+    };
+  </script>
+
+</body>
+</html>
