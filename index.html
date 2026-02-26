@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QR Scanner</title>
+  <title>QR Login</title>
 
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/css/fontawesome-free-7.1.0-web/css/all.min.css">
@@ -11,38 +11,44 @@
 
 <body>
 
-<div class="sky"></div>
-<div class="planet"></div>
-<div class="planet2"></div>
-<div class="rocket"></div>
+  <div class="sky"></div>
+  <div class="planet"></div>
+  <div class="planet2"></div>
+  <div class="rocket"></div>
 
-<div class="card">
-  <div class="top-section">
+  <div class="card">
+    <div class="top-section">
+      <div class="border"></div>
 
-    <div class="border"></div>
+      <div class="message-container">
+        <div id="welcomeMessage"></div>
+      </div>
 
-    <div class="message-container" id="welcomeMessage"></div>
+      <!-- FORM AREA DIGANTI SCANNER -->
+      <div class="vertical-form" id="scannerForm">
+        <div id="reader" style="width:100%;max-width:260px;margin:auto;"></div>
+        <button type="button" id="closeBtn">
+          <i class="fas fa-arrow-left"></i>
+        </button>
+      </div>
 
-    <div class="vertical-form" id="scannerArea">
-      <div id="reader" style="width:100%;max-width:260px;margin:auto;"></div>
-      <button id="backBtn">Kembali</button>
     </div>
 
+    <div class="bottom-section"></div>
   </div>
-
-  <div class="bottom-section"></div>
-</div>
 
 <script src="assets/js/html5-qrcode.min.js"></script>
 <script src="assets/js/animation.js"></script>
 
 <script>
 
+// Bubble intro sama seperti login
 bubbleChat([
   "Mode QR aktif 📷",
   "Arahkan kamera ke kode QR voucher"
-], "welcomeMessage", 600);
+], "welcomeMessage", 700);
 
+// Start scanner
 const scanner = new Html5Qrcode("reader");
 
 scanner.start(
@@ -50,6 +56,7 @@ scanner.start(
   { fps: 10, qrbox: 220 },
   (decodedText) => {
 
+    // kalau hasil scan adalah URL login
     if (decodedText.startsWith("http")) {
       window.location.href = decodedText;
     }
@@ -57,7 +64,8 @@ scanner.start(
   }
 );
 
-document.getElementById("backBtn").onclick = () => {
+// tombol kembali
+document.getElementById("closeBtn").onclick = () => {
   history.back();
 };
 
