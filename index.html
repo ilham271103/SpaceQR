@@ -24,26 +24,15 @@
   <div class="card">
     <div class="top-section">
       <div class="border"></div>
-
-      <!-- Chat Bubble Container -->
-      <div class="message-container">
-        <div id="welcomeMessage"></div>
-      </div>
-
       <!-- QR Scanner Area -->
-      <div id="qr-reader" style="width: 200px; margin: 10px auto; border-radius: 40px;"></div>
+   <div class="camera-wrapper">
+  <div id="qr-reader"></div>
+  <div class="scan-frame"></div>
+</div>
     </div>
 
     <div class="bottom-section">
       <span class="title">Scan QR untuk Login</span>
-
-      <button id="retryBtn"
-              class="retry-btn"
-              onclick="retryScanner()"
-              style="display: none;">
-        <i class="fas fa-redo"></i> Retry
-      </button>
-    </div>
   </div>
 
   <!-- Scanner Logic -->
@@ -54,7 +43,6 @@
       startScanner();
     };
   </script>
+
 </body>
-
 </html>
-
