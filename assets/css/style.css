@@ -1,0 +1,520 @@
+/* =========================================================
+   PRO LOGIN PAGE – OPTIMIZED & TIERED CSS
+   Visual Quality Levels:
+   - pro-lite
+   - pro-normal
+   - pro-full
+   ========================================================= */
+
+/* =====================
+   GLOBAL & VARIABLES
+   ===================== */
+body {
+  --star-speed: 4s;
+  --planet-float-speed: 8s;
+  --backdrop-level: 1.4;
+
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow: hidden;
+  background-color: #040b1d;
+}
+
+
+/* =====================
+   BACKGROUND LAYERS
+   ===================== */
+.sky {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* =====================
+   STAR SYSTEM
+   ===================== */
+.star {
+  position: fixed;
+  width: 2px;
+  height: 2px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+
+  animation: twinkle var(--star-speed) ease-in-out infinite;
+  will-change: opacity, transform;
+}
+
+@keyframes twinkle {
+  0%   { opacity: 0.3; transform: scale(1); }
+  50%  { opacity: 1;   transform: scale(1.1); }
+  100% { opacity: 0.4; transform: scale(1); }
+}
+
+/* LITE */
+body.pro-lite .star {
+  animation: none;
+  opacity: 1;
+}
+
+/* FULL */
+body.pro-full {
+  --star-speed: 3s;
+}
+
+/* =====================
+   SHOOTING STAR
+   ===================== */
+.shooting-star {
+  position: fixed;
+  width: 3px;
+  height: 100px;
+  background: linear-gradient(-45deg, #00f0ff, transparent);
+  transform: rotate(45deg);
+  z-index: 1;
+  pointer-events: none;
+
+  animation: shoot 2s linear forwards;
+  will-change: transform, opacity;
+}
+
+.shooting-star::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 20px #00f0ff;
+}
+
+@keyframes shoot {
+  from { opacity: 1; transform: translate(0,0) rotate(45deg); }
+  to   { opacity: 0; transform: translate(-500px,500px) rotate(45deg); }
+}
+
+/* Disable shooting star in lite */
+body.pro-lite .shooting-star {
+  display: none;
+}
+
+/* =====================
+   PLANET SYSTEM
+   ===================== */
+.planet,
+.planet2 {
+  position: absolute;
+  border-radius: 50%;
+  overflow: hidden;
+  will-change: transform, background-position;
+}
+
+
+/* Planet 1 */
+.planet {
+  width: 100px;
+  height: 100px;
+
+  background: url("../img/planet.webp") repeat-x;
+  background-size: auto 100%;
+  filter: brightness(1.3);
+  z-index: 0;
+}
+
+/* Planet 2 */
+.planet2 {
+  width: 80px;
+  height: 80px;
+  background: url("../img/planet2.webp") repeat-x;
+  background-size: auto 100%;
+  filter: brightness(0.8) opacity(0.5);
+  z-index: 0;
+}
+
+/* LITE */
+body.pro-lite .planet,
+body.pro-lite .planet2 {
+  display: none;
+}
+
+/* NORMAL */
+body.pro-normal .planet {
+  animation: floatPlanet var(--planet-float-speed) ease-in-out infinite;
+}
+body.pro-normal .planet2,
+body.pro-full .planet2 {
+  animation: floatPlanetSoft 14s ease-in-out infinite;
+}
+
+/* FULL */
+body.pro-full .planet {
+  animation:
+    spinPlanet 20s linear infinite,
+    floatPlanet 6s ease-in-out infinite;
+}
+/* =====================
+   PLANET POSITIONING
+   ===================== */
+.planet {
+  top: 10%;
+  left: 30%;
+  transform: translate(-190%, -300%);
+}
+
+.planet2 {
+  top: 70%;
+  left: 75%;
+  transform: translate(120%, 80%);
+}
+
+/* =====================
+   ROCKET POSITIONING
+   ===================== */
+.rocket {
+  top: 20%;
+  left: 50%;
+  transform: translate(10%, -70%);
+}
+
+/* Planet Animations */
+@keyframes spinPlanet {
+  from { background-position: 0 0; }
+  to   { background-position: -800px 0; }
+}
+
+@keyframes floatPlanet {
+  0%,100% { transform: translateY(0); }
+  50%     { transform: translateY(-10px); }
+}
+@keyframes floatPlanetSoft {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
+  }
+}
+
+/* =====================
+   ROCKET (FULL ONLY)
+   ===================== */
+.rocket {
+  display: none;
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  background: url("../img/rocket.webp") no-repeat center / contain;
+  filter: brightness(1.3);
+  z-index: 2;
+}
+
+body.pro-full .rocket {
+  display: block;
+}
+
+/* =====================
+   CARD
+   ===================== */
+.card {
+  width: 90%;
+  max-width: 300px;
+  min-width: 260px;
+
+  background: #1b233d;
+  border-radius: 15px;
+  padding: 5px;
+
+  box-shadow: rgba(100,100,111,0.2) 0 7px 20px;
+  z-index: 10;
+}
+
+/* =====================
+   CARD TOP SECTION
+   ===================== */
+.card .top-section {
+  height: 350px;
+  margin: 8px;
+  border-radius: 15px;
+
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  background: url("../img/bgcard.webp") no-repeat center / cover;
+}
+
+.card .top-section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.301);
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.146) 0%,
+    rgba(0, 0, 0, 0.329) 100%
+  );
+  backdrop-filter: saturate(2.05);
+  pointer-events: none;
+  z-index: 1;
+}
+.card .top-section::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 40px; /* bisa lu sesuaikan seberapa besar area biru itu */
+  height: 40px;
+  background: #040b1d; /* warna background luar lo */
+  border-top-left-radius: 15px;
+  z-index: 3; /* di atas overlay kaca */
+}
+.card .top-section .icons{
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 30px;
+  display: flex;
+  justify-content: space-between;
+  z-index: 2;
+} /* jika ada elemen lain di dalam top-section yang perlu di atas overlay, beri z-index yang lebih tinggi */
+.card .top-section .border{
+  position: relative;
+  z-index: 2;
+}
+.card .top-section .border {
+  border-bottom-right-radius: 10px;
+  height: 30px;
+  width: 130px;
+  background: #1b233d;
+  position: relative;
+  transform: skew(-40deg);
+  box-shadow: -10px -10px 0 0 #1b233d;
+}
+.card .top-section .border::before {
+  content: "";
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  top: 0;
+  right: -15px;
+  background: rgba(255, 255, 255, 0);
+  border-top-left-radius: 10px;
+  box-shadow: -5px -5px 0 2px #1b233d;
+}
+.card .top-section::before {
+  content: "";
+  position: absolute;
+  top: 30px;
+  left: 0;
+  background: rgba(255, 255, 255, 0);
+  height: 15px;
+  width: 15px;
+  border-top-left-radius: 15px;
+  box-shadow: -5px -5px 0 2px #1b233d;
+}
+
+/* Glass overlay */
+.card .top-section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+
+  background: linear-gradient(
+    120deg,
+    rgba(255,255,255,0.15),
+    rgba(0,0,0,0.35)
+  );
+
+  box-shadow: inset 0 0 30px rgba(255,255,255,0.3);
+  backdrop-filter: saturate(var(--backdrop-level));
+  pointer-events: none;
+}
+
+/* Backdrop tiers */
+body.pro-lite {
+  --backdrop-level: 0;
+}
+
+body.pro-lite .card .top-section::after {
+  backdrop-filter: none;
+}
+
+body.pro-normal {
+  --backdrop-level: 1.4;
+}
+
+body.pro-full {
+  --backdrop-level: 2.05;
+}
+
+/* =====================
+   MESSAGE / CHAT
+   ===================== */
+.message-container {
+  min-height: 60px;
+  margin-bottom: 1.5em;
+  margin-top: 5px;
+  display: flex;
+  flex-direction: column; /* ⬅️ ini penting */
+  margin-left: 10px;
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 12px 16px 12px;
+  min-height: 0;
+}
+
+.chat-bubble {
+  align-self: flex-start;
+  position: relative;
+  background: rgba(0, 240, 255, 0.1);
+  border: 2px solid #00f0ff;
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  color: #fff;
+  font-size: 14px;
+  width: fit-content;
+  max-width: 90%;
+  animation: bubbleIn 0.4s ease forwards;
+  opacity: 0;
+  transform: translateY(10px);
+}
+.chat-bubble::after {
+  content: "";
+  position: absolute;
+  top: -2px; /* ⬅️ geser ke atas bubble */
+  left: -7.7px;
+  width: 0;
+  height: 0;
+  border: 8px solid transparent;
+  border-top-color: #00eeffa0;
+}
+.user-bubble {
+  align-self: flex-end; /* ⬅️ ini yang bikin pindah ke kanan */
+  margin-left: auto; /* ⬅️ ini juga penting */
+  background: rgba(0, 240, 255, 0.2);
+  border: 2px solid #00f0ff;
+  color: #00f0ff;
+}
+.user-bubble::after {
+  left: auto;
+  right: -7.7px;
+  border-top-color: #00f0ff;
+}
+
+.error-bubble::after {
+  border-color: #ff4d4d transparent transparent transparent; /* tail merah */
+}
+@keyframes bubbleIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/* =====================
+   FORM
+   ===================== */
+.input-area,
+.vertical-form {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+}
+
+.vertical-form {
+  flex-direction: column;
+}
+
+#loginForm input {
+  padding: 12px;
+  border-radius: 8px;
+  border: 2px solid #00f0ff;
+  font-size: 14px;
+  background: transparent;
+  color: #fff;
+  margin-top: auto;
+  min-width: 0;
+}
+
+#loginForm button {
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background: #00f0ff;
+  color: #1b233d;
+  cursor: pointer;
+  flex-shrink:0;
+}
+
+/* =====================
+   MODE BUTTONS
+   ===================== */
+.extra-buttons {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+}
+.extra-buttons .lgt-btn {
+  border: solid 1px #ff0000;
+}
+.extra-buttons button {
+  flex: 1;
+  padding: 10px;
+  background: rgba(0,240,255,0.1);
+  border: 1px solid #00f0ff;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.extra-buttons button:hover {
+  background: #00f0ff;
+  color: #1b233d;
+}
+.extra-buttons .lgt-btn:hover {
+  background: #ff0000;
+  color: #3d1b1b;
+}
+@media screen and (max-width: 500px) {
+  .planet{
+    top: 5%;
+    left: 10%;
+  }
+  .planet2{
+    top: 80%;
+    left: 75%;
+  }
+  .card{
+    scale: 0.9;
+  }
+}
+@media screen and (min-width: 768px) {
+  .planet{
+    top: 5%;
+    left:20%;
+    
+  }
+  .rocket{
+    top: 30%;
+    left: 60%;
+  }
+  .planet2{
+    left: 65%;
+  }
+  .card{
+    scale: 1;
+  }
+}
