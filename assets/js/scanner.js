@@ -22,31 +22,22 @@ function startScanner() {
   qrReader = new Html5Qrcode("qr-reader");
 
   qrReader.start(
-    { facingMode: "environment" },
-    { fps: 10, qrbox: 100 },
-
-    (decodedText) => {
-      loginAttempted = true;
-
-      qrReader.stop().then(() => {
-        bubbleChat(
-          ["✅ QR Terdeteksi", "⏳ Redirect..."],
-          "welcomeMessage",
-          700
-        );
-
-        setTimeout(() => {
-          window.location.href = decodedText;
-        }, 1500);
-      });
-    },
-
-    (errorMessage) => {
-      // Error scan diabaikan supaya tidak spam console
-    }
-  ).catch(err => {
-    console.error("Scanner gagal start:", err);
-  });
+  { facingMode: "environment" },
+  {
+    fps: 10,
+    qrbox: undefined, 
+    aspectRatio: 1
+  },
+  (decodedText) => {
+    loginAttempted = true;
+    qrReader.stop().then(() => {
+      bubbleChat(["✅ QR Terdeteksi", "⏳ Redirect..."], "welcomeMessage", 700);
+      setTimeout(() => {
+        window.location.href = decodedText;
+      }, 1500);
+    });
+  }
+);
 }
 
 function retryScanner() {
