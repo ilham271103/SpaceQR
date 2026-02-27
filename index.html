@@ -1,144 +1,70 @@
-let qrReader;
-let loginAttempted = false;
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QR Scanner - Mikrotik Login</title>
 
-function setScannerHint(message) {
-  const hintEl = document.getElementById("scannerHint");
-  if (!hintEl) return;
-  hintEl.textContent = message;
-}
+  <!-- CSS -->
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="assets/css/fontawesome-free-7.1.0-web/css/all.min.css" />
 
-function resolveHotspotName() {
-  const params = new URLSearchParams(window.location.search);
-  const host = (params.get("host") || "").trim();
-  return host || location.hostname || "hotspot";
-}
+  <!-- QR Library (WAJIB sebelum scanner.js) -->
+  <script src="assets/js/html5-qrcode.min.js"></script>
+</head>
 
-function renderHotspotName() {
-  const el = document.getElementById("hotspotName");
-  if (!el) return;
-  el.textContent = resolveHotspotName();
-}
+<body>
+  <!-- Background Elements -->
+  <div class="sky"></div>
+  <div class="planet"></div>
+  <div class="planet2"></div>
+  <div class="rocket"></div>
 
-async function requestCameraPermission() {
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    setScannerHint("Browser tidak mendukung akses kamera.");
-    return false;
-  }
+  <!-- Main Card -->
+  <div class="card">
+    <div class="top-section">
+      <div class="border"></div>
+      <div id="hotspotName"></div>
+      <!-- QR Scanner Area -->
+   <div class="camera-wrapper">
+  <div id="qr-reader"></div>
+  <div class="scan-frame"></div>
+</div>
+    </div>
 
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: "environment" }
-    });
-    stream.getTracks().forEach((track) => track.stop());
-    setScannerHint("Akses kamera diizinkan.");
-    return true;
-  } catch (_) {
-    setScannerHint("Akses kamera ditolak. Izinkan kamera di browser/WebView lalu coba lagi.");
-    return false;
-  }
-}
+    <div class="bottom-section">
+      <span class="title" style="margin-bottom: 25px;">Scan QR untuk Login</span>
+      <div id="scannerHint">Jika kamera belum muncul, tekan "akses kamera".</div>
+      <div class="extra-buttons">
+        <button type="button" id="cameraAccessBtn">
+          <i class="fas fa-camera" aria-hidden="true"></i>
+          <span class="btn-label">akses kamera</span>
+        </button>
+        <button type="button" id="openBrowserBtn">
+          <i class="fas fa-globe" aria-hidden="true"></i>
+          <span class="btn-label">buka browser</span>
+        </button>
+        <button type="button" id="backLoginBtn">
+          <i class="fas fa-arrow-left" aria-hidden="true"></i>
+          <span class="btn-label">kembali login</span>
+        </button>
+      </div>
+    </div>
+  </div>
 
-function initCameraAccessButton() {
-  const btn = document.getElementById("cameraAccessBtn");
-  if (!btn) return;
+  <!-- Scanner Logic -->
+  <script src="assets/js/stars.js"></script>
+  <script src="assets/js/scanner.js"></script>
 
-  btn.addEventListener("click", async () => {
-    const granted = await requestCameraPermission();
-    if (!granted) return;
-    loginAttempted = false;
-    startScanner();
-  });
-}
-
-function resolveBackLoginUrl() {
-  const params = new URLSearchParams(window.location.search);
-  const host = (params.get("host") || "").trim();
-  const proto = ((params.get("proto") || "http").trim() || "http").replace(":", "");
-
-  if (host) {
-    return `${proto}://${host}/login`;
-  }
-
-  return "";
-}
-
-function initBackLoginButton() {
-  const btn = document.getElementById("backLoginBtn");
-  if (!btn) return;
-
-  btn.addEventListener("click", () => {
-    const backUrl = resolveBackLoginUrl();
-    if (backUrl) {
-      window.location.href = backUrl;
-      return;
-    }
-
-    if (document.referrer) {
-      window.location.href = document.referrer;
-      return;
-    }
-
-    window.history.back();
-  });
-}
-
-function bubbleChat(lines, containerId, delay = 600) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
-
-  lines.forEach((line, i) => {
-    setTimeout(() => {
-      const bubble = document.createElement("div");
-      bubble.className = "chat-bubble";
-      bubble.innerHTML = line;
-      container.appendChild(bubble);
-      container.scrollTop = container.scrollHeight;
-    }, i * delay);
-  });
-}
-
-function startScanner() {
-  if (loginAttempted) return;
-  setScannerHint("Memulai kamera...");
-
-  qrReader = new Html5Qrcode("qr-reader");
-
-  qrReader
-    .start(
-      { facingMode: "environment" },
-      {
-        fps: 10,
-        qrbox: undefined,
-        aspectRatio: 1
-      },
-      (decodedText) => {
-        loginAttempted = true;
-        if (window.SpaceStars) {
-          window.SpaceStars.stop();
-        }
-        qrReader.stop().then(() => {
-          setScannerHint("QR terdeteksi, mengalihkan...");
-          bubbleChat(["QR Terdeteksi", "Redirect..."], "welcomeMessage", 700);
-          setTimeout(() => {
-            window.location.href = decodedText;
-          }, 1500);
-        });
-      }
-    )
-    .catch(() => {
-      loginAttempted = false;
-      setScannerHint("Kamera gagal dibuka. Tekan 'akses kamera' lalu izinkan permission.");
-    });
-}
-
-function retryScanner() {
-  loginAttempted = false;
-
-  if (qrReader) {
-    qrReader.stop().then(() => {
+  <script>
+    window.onload = function () {
+      renderHotspotName();
+      initCameraAccessButton();
+      initOpenBrowserButton();
+      initBackLoginButton();
       startScanner();
-    });
-  } else {
-    startScanner();
-  }
-}
+    };
+  </script>
+
+</body>
+</html>
