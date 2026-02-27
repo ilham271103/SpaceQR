@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QR Scanner - Mikrotik Login</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="assets/css/fontawesome-free-7.1.0-web/css/all.min.css" />
+
+  <!-- QR Library (WAJIB sebelum scanner.js) -->
+  <script src="assets/js/html5-qrcode.min.js"></script>
+</head>
+
+<body>
+  <!-- Background Elements -->
+  <div class="sky"></div>
+  <div class="planet"></div>
+  <div class="planet2"></div>
+  <div class="rocket"></div>
+
+  <!-- Main Card -->
+  <div class="card">
+    <div class="top-section">
+      <div class="border"></div>
+      <div id="hotspotName"></div>
+      <!-- QR Scanner Area -->
+   <div class="camera-wrapper">
+  <div id="qr-reader"></div>
+  <div class="scan-frame"></div>
+</div>
+    </div>
+
+    <div class="bottom-section">
+      <span class="title" style="margin-bottom: 25px;">Scan QR untuk Login</span>
+      <div class="extra-buttons">
+        <button type="button" id="backLoginBtn">
+          <i class="fas fa-arrow-left" aria-hidden="true"></i>
+          <span class="btn-label">kembali login</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scanner Logic -->
+  <script src="assets/js/stars.js"></script>
+  <script src="assets/js/scanner.js"></script>
+
+  <script>
+    window.onload = function () {
+      renderHotspotName();
+      initBackLoginButton();
+      startScanner();
+    };
+  </script>
+
+</body>
+</html>
