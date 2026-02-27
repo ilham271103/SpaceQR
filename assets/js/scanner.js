@@ -13,6 +13,28 @@ function renderHotspotName() {
   el.textContent = resolveHotspotName();
 }
 
+function tryOpenExternalBrowser() {
+  const currentUrl = window.location.href;
+  const isAndroid = /Android/i.test(navigator.userAgent);
+
+  if (isAndroid) {
+    const noProto = currentUrl.replace(/^https?:\/\//, "");
+    const intentUrl = `intent://${noProto}#Intent;scheme=https;package=com.android.chrome;end`;
+    window.location.href = intentUrl;
+    return;
+  }
+
+  window.open(currentUrl, "_blank", "noopener,noreferrer");
+}
+
+function initOpenBrowserButton() {
+  const btn = document.getElementById("openBrowserBtn");
+  if (!btn) return;
+  btn.addEventListener("click", () => {
+    tryOpenExternalBrowser();
+  });
+}
+
 function resolveBackLoginUrl() {
   const params = new URLSearchParams(window.location.search);
   const host = (params.get("host") || "").trim();
@@ -43,6 +65,27 @@ function initBackLoginButton() {
 
     window.history.back();
   });
+}
+
+function maybeForceExternalBrowser() {
+  const params = new URLSearchParams(window.location.search);
+  const forceBrowser = params.get("forceBrowser") === "1";
+  if (!forceBrowser) return;
+
+  const isAndroid = /Android/i.test(navigator.userAgent);
+  const isWebView =
+    /\bwv\b/i.test(navigator.userAgent) ||
+    /; wv\)/i.test(navigator.userAgent) ||
+    /WebView/i.test(navigator.userAgent);
+  if (!(isAndroid && isWebView)) return;
+
+  const alreadyTried = sessionStorage.getItem("scanner_force_browser_tried") === "1";
+  if (alreadyTried) return;
+  sessionStorage.setItem("scanner_force_browser_tried", "1");
+
+  setTimeout(() => {
+    tryOpenExternalBrowser();
+  }, 300);
 }
 
 function bubbleChat(lines, containerId, delay = 600) {
@@ -98,3 +141,5 @@ function retryScanner() {
     startScanner();
   }
 }
+
+maybeForceExternalBrowser();
