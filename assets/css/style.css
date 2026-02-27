@@ -340,13 +340,14 @@ body.pro-lite .rocket {
 
 #hotspotName {
   position: absolute;
+  top: 6px;
   left: 12px;
   z-index: 4;
   max-width: 110px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 14px;
+  font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.4px;
   color: #9fefff;
@@ -406,6 +407,13 @@ body.pro-lite .rocket {
   color: white;
   text-align: center;
   letter-spacing: 2px;
+}
+
+#scannerHint {
+  color: #a6eef9;
+  font-size: 12px;
+  text-align: center;
+  margin: 6px 10px 14px 10px;
 }
 .card .bottom-section .row {
   display: flex;
