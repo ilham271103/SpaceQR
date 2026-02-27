@@ -1,6 +1,12 @@
 let qrReader;
 let loginAttempted = false;
 
+function setScannerHint(message) {
+  const hintEl = document.getElementById("scannerHint");
+  if (!hintEl) return;
+  hintEl.textContent = message;
+}
+
 function resolveHotspotName() {
   const params = new URLSearchParams(window.location.search);
   const host = (params.get("host") || "").trim();
@@ -13,25 +19,34 @@ function renderHotspotName() {
   el.textContent = resolveHotspotName();
 }
 
-function tryOpenExternalBrowser() {
-  const currentUrl = window.location.href;
-  const isAndroid = /Android/i.test(navigator.userAgent);
-
-  if (isAndroid) {
-    const noProto = currentUrl.replace(/^https?:\/\//, "");
-    const intentUrl = `intent://${noProto}#Intent;scheme=https;package=com.android.chrome;end`;
-    window.location.href = intentUrl;
-    return;
+async function requestCameraPermission() {
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    setScannerHint("Browser tidak mendukung akses kamera.");
+    return false;
   }
 
-  window.open(currentUrl, "_blank", "noopener,noreferrer");
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: "environment" }
+    });
+    stream.getTracks().forEach((track) => track.stop());
+    setScannerHint("Akses kamera diizinkan.");
+    return true;
+  } catch (_) {
+    setScannerHint("Akses kamera ditolak. Izinkan kamera di browser/WebView lalu coba lagi.");
+    return false;
+  }
 }
 
-function initOpenBrowserButton() {
-  const btn = document.getElementById("openBrowserBtn");
+function initCameraAccessButton() {
+  const btn = document.getElementById("cameraAccessBtn");
   if (!btn) return;
-  btn.addEventListener("click", () => {
-    tryOpenExternalBrowser();
+
+  btn.addEventListener("click", async () => {
+    const granted = await requestCameraPermission();
+    if (!granted) return;
+    loginAttempted = false;
+    startScanner();
   });
 }
 
@@ -67,27 +82,6 @@ function initBackLoginButton() {
   });
 }
 
-function maybeForceExternalBrowser() {
-  const params = new URLSearchParams(window.location.search);
-  const forceBrowser = params.get("forceBrowser") === "1";
-  if (!forceBrowser) return;
-
-  const isAndroid = /Android/i.test(navigator.userAgent);
-  const isWebView =
-    /\bwv\b/i.test(navigator.userAgent) ||
-    /; wv\)/i.test(navigator.userAgent) ||
-    /WebView/i.test(navigator.userAgent);
-  if (!(isAndroid && isWebView)) return;
-
-  const alreadyTried = sessionStorage.getItem("scanner_force_browser_tried") === "1";
-  if (alreadyTried) return;
-  sessionStorage.setItem("scanner_force_browser_tried", "1");
-
-  setTimeout(() => {
-    tryOpenExternalBrowser();
-  }, 300);
-}
-
 function bubbleChat(lines, containerId, delay = 600) {
   const container = document.getElementById(containerId);
   if (!container) return;
@@ -105,29 +99,36 @@ function bubbleChat(lines, containerId, delay = 600) {
 
 function startScanner() {
   if (loginAttempted) return;
+  setScannerHint("Memulai kamera...");
 
   qrReader = new Html5Qrcode("qr-reader");
 
-  qrReader.start(
-  { facingMode: "environment" },
-  {
-    fps: 10,
-    qrbox: undefined, 
-    aspectRatio: 1
-  },
-  (decodedText) => {
-    loginAttempted = true;
-    if (window.SpaceStars) {
-      window.SpaceStars.stop();
-    }
-    qrReader.stop().then(() => {
-      bubbleChat(["✅ QR Terdeteksi", "⏳ Redirect..."], "welcomeMessage", 700);
-      setTimeout(() => {
-        window.location.href = decodedText;
-      }, 1500);
+  qrReader
+    .start(
+      { facingMode: "environment" },
+      {
+        fps: 10,
+        qrbox: undefined,
+        aspectRatio: 1
+      },
+      (decodedText) => {
+        loginAttempted = true;
+        if (window.SpaceStars) {
+          window.SpaceStars.stop();
+        }
+        qrReader.stop().then(() => {
+          setScannerHint("QR terdeteksi, mengalihkan...");
+          bubbleChat(["QR Terdeteksi", "Redirect..."], "welcomeMessage", 700);
+          setTimeout(() => {
+            window.location.href = decodedText;
+          }, 1500);
+        });
+      }
+    )
+    .catch(() => {
+      loginAttempted = false;
+      setScannerHint("Kamera gagal dibuka. Tekan 'akses kamera' lalu izinkan permission.");
     });
-  }
-);
 }
 
 function retryScanner() {
@@ -141,5 +142,3 @@ function retryScanner() {
     startScanner();
   }
 }
-
-maybeForceExternalBrowser();
