@@ -50,6 +50,28 @@ function initCameraAccessButton() {
   });
 }
 
+function tryOpenExternalBrowser() {
+  const currentUrl = window.location.href;
+  const isAndroid = /Android/i.test(navigator.userAgent);
+
+  if (isAndroid) {
+    const noProto = currentUrl.replace(/^https?:\/\//, "");
+    const intentUrl = `intent://${noProto}#Intent;scheme=https;package=com.android.chrome;end`;
+    window.location.href = intentUrl;
+    return;
+  }
+
+  window.open(currentUrl, "_blank", "noopener,noreferrer");
+}
+
+function initOpenBrowserButton() {
+  const btn = document.getElementById("openBrowserBtn");
+  if (!btn) return;
+  btn.addEventListener("click", () => {
+    tryOpenExternalBrowser();
+  });
+}
+
 function resolveBackLoginUrl() {
   const params = new URLSearchParams(window.location.search);
   const host = (params.get("host") || "").trim();
