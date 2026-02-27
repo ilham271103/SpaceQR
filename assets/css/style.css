@@ -1,0 +1,292 @@
+/* === UMUM === */
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  min-height: 100dvh;
+  overflow: hidden;
+  background-color: #040b1d;
+}
+
+/* === LATAR === */
+.sky {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
+.star {
+  position: fixed;
+  background: #fff;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+  animation: twinkle infinite alternate;
+}
+
+@keyframes twinkle {
+  0% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+}
+
+.shooting-star {
+  position: fixed;
+  width: 3px;
+  height: 100px;
+  background: linear-gradient(-45deg, #00f0ff, transparent);
+  transform: rotate(45deg);
+  pointer-events: none;
+  z-index: 2;
+  animation: shoot 2s linear forwards;
+  will-change: transform, opacity;
+}
+
+body.pro-lite .shooting-star {
+  display: none;
+}
+
+.shooting-star::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 20px #00f0ff, 0 0 40px #00f0ff;
+}
+
+@keyframes shoot {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(45deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-500px, 500px) rotate(45deg);
+  }
+}
+
+/* === KARTU === */
+.card {
+  width: 90%;
+  max-width: 300px;
+  min-width: 260px;
+  border-radius: 15px;
+  background: #1b233d;
+  box-shadow: rgba(100, 100, 111, 0.2) 0 7px 20px 0;
+  padding: 5px;
+  overflow: hidden;
+  z-index: 10;
+}
+
+.card .top-section {
+  height: 300px;
+  margin: 8px;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  background: url("../img/bgcard.webp") no-repeat center center/cover;
+  position: relative;
+  overflow: hidden;
+}
+
+.card .top-section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.3);
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(0, 0, 0, 0.33) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.card .top-section .border {
+  border-bottom-right-radius: 10px;
+  height: 30px;
+  width: 130px;
+  background: #1b233d;
+  position: relative;
+  transform: skew(-40deg);
+  box-shadow: -10px -10px 0 0 #1b233d;
+  z-index: 2;
+}
+
+.card .top-section .border::before {
+  content: "";
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  top: 0;
+  right: -15px;
+  background: transparent;
+  border-top-left-radius: 10px;
+  box-shadow: -5px -5px 0 2px #1b233d;
+}
+
+#hotspotName {
+  position: absolute;
+  left: 12px;
+  z-index: 4;
+  max-width: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  color: #9fefff;
+  text-transform: lowercase;
+}
+
+.camera-wrapper {
+  position: absolute;
+  inset: 0;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+#qr-reader {
+  width: 100%;
+  height: 100%;
+}
+
+#qr-reader video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+  border-radius: 15px;
+}
+
+.scan-frame {
+  position: absolute;
+  inset: 25%;
+  border: 2px solid rgba(173, 225, 255, 0.8);
+  border-radius: 15px;
+  pointer-events: none;
+}
+
+.scan-frame::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: #00f0ff;
+  top: 0;
+  animation: scanline 2s linear infinite;
+}
+
+body.pro-lite .scan-frame::after {
+  animation: scanline 3s linear infinite;
+}
+
+@keyframes scanline {
+  0% {
+    top: 0;
+  }
+  100% {
+    top: 100%;
+  }
+}
+
+.card .bottom-section {
+  margin-top: 10px;
+  padding: 10px 5px;
+}
+
+.card .bottom-section .title {
+  display: block;
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+#scannerHint {
+  color: #a6eef9;
+  font-size: 12px;
+  text-align: center;
+  margin: 6px 10px 14px;
+  padding-bottom: 14px;
+}
+
+.extra-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: -12px;
+  margin-bottom: 12px;
+  gap: 10px;
+  padding: 0 10px;
+}
+
+.extra-buttons button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid #00f0ff;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.extra-buttons button:hover {
+  background: #00f0ff;
+  color: #1b233d;
+  box-shadow: 0 0 10px #00f0ff;
+}
+
+.extra-buttons i {
+  display: inline-block;
+  font-size: 14px;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+.extra-buttons .btn-label {
+  display: inline-block;
+  font-size: 12px;
+  text-transform: none;
+  color: #fff;
+  margin-left: 6px;
+}
+
+@media screen and (min-width: 500px) {
+  .card {
+    scale: 0.8;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .card {
+    scale: 1;
+  }
+}
+
