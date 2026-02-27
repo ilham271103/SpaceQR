@@ -150,6 +150,6 @@
   if (document.readyState === "complete" || document.readyState === "interactive") {
     start();
   } else {
-    window.addEventListener("load", start);
+    document.addEventListener("DOMContentLoaded", start);
   }
 })();
